@@ -51,7 +51,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/active_record-order_by_ids.
+Bug reports and pull requests are welcome on GitHub at https://github.com/botandrose/active_record-order_by_ids.
 
 
 ## License
