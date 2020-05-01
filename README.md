@@ -1,5 +1,8 @@
 # ActiveRecord::OrderByIds
 
+[![Build Status](https://travis-ci.org/botandrose/active_record-order_by_ids.svg)](https://travis-ci.org/botandrose/active_record-order_by_ids)
+[![Code Climate](https://codeclimate.com/github/botandrose/active_record-order_by_ids/badges/gpa.svg)](https://codeclimate.com/github/botandrose/active_record-order_by_ids)
+
 ActiveRecord scope methods for ordering by an explicit list of values.
 
 ## Installation
