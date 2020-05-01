@@ -1,8 +1,6 @@
 # ActiveRecord::OrderByIds
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/active_record/order_by_ids`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+ActiveRecord scope methods for ordering by an explicit list of values.
 
 ## Installation
 
@@ -22,7 +20,25 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+This gem adds two methods to active record scopes: `.order_by_ids`, and the more general `.order_by`.
+
+Examples:
+
+```ruby
+user1 = User.create(id: 1)
+user2 = User.create(id: 2)
+user3 = User.create(id: 3)
+
+User.order_by_ids([2,3,1]) #=> [user2, user3, user1]
+```
+
+```ruby
+user3 = User.create(parent_id: 3)
+user2 = User.create(parent_id: 2)
+user1 = User.create(parent_id: 1)
+
+User.order_by(parent_id: [2,3,1]) #=> [user2, user3, user1]
+```
 
 ## Development
 
