@@ -9,8 +9,9 @@ module ActiveRecord
 
     def order_by hash
       hash.reduce(reorder(false)) do |scope, (key, ids)|
+        ids.map! { |id| connection.quote(id) }
         fragments = []
-        fragments += ["#{key} NOT IN (#{ids.map(&:to_s).join(",")}) OR #{key} IS NULL"] if ids.any?
+        fragments += ["#{key} NOT IN (#{ids.join(",")}) OR #{key} IS NULL"] if ids.any?
         fragments += ids.reverse.map { |id| "#{key}=#{id}" }
         scope.order!(Arel.sql(fragments.join(", ")))
       end
