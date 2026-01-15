@@ -4,21 +4,12 @@
 
 ActiveRecord scope methods for ordering by an explicit list of values.
 
-## Installation
+## Why Use This?
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'active_record-order_by_ids'
-```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install active_record-order_by_ids
+Common use cases:
+- **Preserving search result ordering** from external services (Elasticsearch, Algolia, etc.)
+- **Displaying records in user-defined order** stored as an array of IDs
+- **Maintaining order after filtering** a pre-ordered list of IDs
 
 ## Usage
 
@@ -41,6 +32,27 @@ user1 = User.create(parent_id: 1)
 
 User.order_by(parent_id: [2,3,1]) #=> [user2, user3, user1]
 ```
+
+Multiple columns:
+
+```ruby
+User.order_by(parent_id: [2, 1], study_id: %w[B A])
+```
+
+### Behavior
+
+- Records with values **not in the list** are sorted to the end
+- **NULL values** are sorted to the end
+- Works with **non-integer values** (strings, etc.)
+- **Chainable** with other scopes:
+
+```ruby
+User.where(active: true).order_by_ids([2, 3, 1]).limit(10)
+```
+
+### Database Support
+
+Tested with SQLite, PostgreSQL, and MySQL.
 
 ## Development
 
