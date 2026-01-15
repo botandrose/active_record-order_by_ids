@@ -13,6 +13,30 @@ jobs:
           - gemfiles/rails_7.2.gemfile
           - gemfiles/rails_8.0.gemfile
           - gemfiles/rails_8.1.gemfile
+        database: [sqlite, postgres, mysql]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 3306:3306
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
     steps:
@@ -21,4 +45,13 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - run: bundle exec rake
+      - name: Create test database
+        if: matrix.database == 'postgres'
+        run: PGPASSWORD=postgres createdb -h localhost -U postgres test
+      - name: Create test database
+        if: matrix.database == 'mysql'
+        run: mysql -h 127.0.0.1 -u root -e "CREATE DATABASE test"
+      - name: Run tests
+        run: bundle exec rake
+        env:
+          DATABASE_URL: ${{ matrix.database == 'postgres' && 'postgres://postgres:postgres@localhost:5432/test' || matrix.database == 'mysql' && 'trilogy://root@127.0.0.1:3306/test' || 'sqlite3::memory:' }}

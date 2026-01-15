@@ -1,6 +1,6 @@
 RSpec.describe ActiveRecord::OrderByIds do
   before do
-    ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
+    ActiveRecord::Base.establish_connection database_config
 
     silence_stream(STDOUT) do
       ActiveRecord::Schema.define do
@@ -12,6 +12,14 @@ RSpec.describe ActiveRecord::OrderByIds do
     end
 
     class User < ActiveRecord::Base
+    end
+  end
+
+  after do
+    silence_stream(STDOUT) do
+      ActiveRecord::Schema.define do
+        drop_table :users
+      end
     end
   end
 
