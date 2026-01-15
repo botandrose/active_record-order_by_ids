@@ -66,5 +66,14 @@ RSpec.describe ActiveRecord::OrderByIds do
       userC = User.create(study_id: "C")
       expect(User.order_by(study_id: %w[B A C])).to eq [userB, userA, userC]
     end
+
+    it "can order by multiple columns" do
+      user1 = User.create(parent_id: 1, study_id: "A")
+      user2 = User.create(parent_id: 1, study_id: "B")
+      user3 = User.create(parent_id: 2, study_id: "A")
+      user4 = User.create(parent_id: 2, study_id: "B")
+
+      expect(User.order_by(parent_id: [2, 1], study_id: %w[B A])).to eq [user4, user3, user2, user1]
+    end
   end
 end
